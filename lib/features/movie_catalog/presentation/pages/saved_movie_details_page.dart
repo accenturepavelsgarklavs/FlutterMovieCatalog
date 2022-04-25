@@ -1,13 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_movie_catalog/features/movie_catalog/domain/entities/movies_entity.dart';
+import 'package:flutter_movie_catalog/features/movie_catalog/domain/entities/saved_movies_entity.dart';
 
-class MovieDetails extends StatelessWidget {
+class SavedMovieDetails extends StatelessWidget {
   final String imageUrl = "https://image.tmdb.org/t/p/w600_and_h900_bestv2/";
-  final MoviesEntity? movies;
+  final List<SavedMoviesEntity>? movies;
   final int index;
 
-  const MovieDetails({Key? key, required this.movies, required this.index})
+  const SavedMovieDetails({Key? key, required this.movies, required this.index})
       : super(key: key);
 
   @override
@@ -24,14 +24,14 @@ class MovieDetails extends StatelessWidget {
               child: Column(
                 children: <Widget>[
                   CircleAvatar(
-                    backgroundImage: NetworkImage(
-                        imageUrl + "${movies?.results[index].posterPath}"),
+                    backgroundImage:
+                        NetworkImage(imageUrl + "${movies?[index].posterPath}"),
                     radius: 120,
                   ),
                   Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Text(
-                      "${movies?.results[index].title}",
+                      "${movies?[index].title}",
                       textAlign: TextAlign.center,
                       style: const TextStyle(fontSize: 32),
                     ),
@@ -42,7 +42,7 @@ class MovieDetails extends StatelessWidget {
                         color: Colors.amber),
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
-                      child: Text("${movies?.results[index].overview}",
+                      child: Text("${movies?[index].overview}",
                           style: const TextStyle(
                               fontSize: 18, color: Colors.black)),
                     ),
@@ -56,7 +56,7 @@ class MovieDetails extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: Text(
-                          "Total vote count: ${movies?.results[index].voteCount}",
+                          "Total vote count: ${movies?[index].voteCount}",
                           style: const TextStyle(
                               fontSize: 24, color: Colors.black),
                         ),
@@ -70,7 +70,7 @@ class MovieDetails extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Text(
-                        "Original language: ${movies?.results[index].originalLanguage}",
+                        "Original language: ${movies?[index].originalLanguage}",
                         style:
                             const TextStyle(fontSize: 24, color: Colors.black),
                       ),

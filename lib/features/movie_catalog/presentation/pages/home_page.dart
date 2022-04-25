@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_movie_catalog/features/movie_catalog/data/datasources/movie_db_remote_data_source.dart';
 import 'package:flutter_movie_catalog/features/movie_catalog/domain/entities/movies_entity.dart';
+import 'package:flutter_movie_catalog/features/movie_catalog/domain/usecases/get_movies.dart';
 import 'package:flutter_movie_catalog/features/movie_catalog/presentation/widgets/movie_card.dart';
 
 import '../../data/repositories/movies_repository_impl.dart';
@@ -13,17 +13,19 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  MoviesRepositoryImpl repository =
-      MoviesRepositoryImpl(movieDbRemoteDataSource: MovieDbRemoteDataSource());
+  MoviesRepositoryImpl repository = MoviesRepositoryImpl();
 
-  final filterItems = ["Score from highest to lowest", "Score from lowest to highest"];
-  String value = "Score from highest to lowest";
+  final _filterItems = [
+    "Score from highest to lowest",
+    "Score from lowest to highest"
+  ];
+  String _value = "Score from highest to lowest";
 
-  late Future<MoviesEntity> futureMovies;
+  late Future<MoviesEntity> _futureMovies;
 
   @override
   void initState() {
-    futureMovies = repository.getData();
+    _futureMovies = GetMovies(repository: repository).data();
     super.initState();
   }
 
@@ -40,17 +42,23 @@ class _HomePageState extends State<HomePage> {
             icon: const Icon(Icons.settings),
           ),
         ],
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pushNamed(context, "saved_movies");
+          },
+          icon: const Icon(Icons.save),
+        ),
         centerTitle: true,
       ),
       body: FutureBuilder<MoviesEntity>(
-        future: futureMovies,
+        future: _futureMovies,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return RefreshIndicator(
               onRefresh: () async {
                 setState(() {
-                  futureMovies = repository.getData();
-                  value = "Score from highest to lowest";
+                  _futureMovies = repository.getData();
+                  _value = "Score from highest to lowest";
                 });
               },
               child: SafeArea(
@@ -61,19 +69,22 @@ class _HomePageState extends State<HomePage> {
                     Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Container(
-                        width: 250,
-                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 14, vertical: 4),
                         decoration: BoxDecoration(
-                          border: Border.all(color: Colors.amber, width: 2),
-                          borderRadius: BorderRadius.circular(4)
-                        ),
+                            border: Border.all(color: Colors.amber, width: 2),
+                            borderRadius: BorderRadius.circular(4)),
                         child: DropdownButtonHideUnderline(
                           child: DropdownButton<String>(
-                              items: filterItems.map(buildFilterItem).toList(),
-                              value: value,
-                              onChanged: (value) => setState(() => onFilter(value!)),
-                              iconSize: 36,
-                              icon: const Icon(Icons.arrow_drop_down, color: Colors.amber,),
+                            items: _filterItems.map(buildFilterItem).toList(),
+                            value: _value,
+                            onChanged: (value) =>
+                                setState(() => onFilter(value!)),
+                            iconSize: 28,
+                            icon: const Icon(
+                              Icons.arrow_drop_down,
+                              color: Colors.amber,
+                            ),
                           ),
                         ),
                       ),
@@ -107,16 +118,20 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  DropdownMenuItem<String> buildFilterItem(String item) => DropdownMenuItem(child: Text(item), value: item,);
+  DropdownMenuItem<String> buildFilterItem(String item) => DropdownMenuItem(
+        child: Text(item),
+        value: item,
+      );
 
   void onFilter(String value) {
     if (value == "Score from highest to lowest") {
-      this.value = value;
-      futureMovies.then((value) => value.results.sort((b, a) => a.voteAverage.compareTo(b.voteAverage)));
+      _value = value;
+      _futureMovies.then((value) =>
+          value.results.sort((b, a) => a.voteAverage.compareTo(b.voteAverage)));
     } else if (value == "Score from lowest to highest") {
-      this.value = value;
-      futureMovies.then((value) => value.results.sort((a, b) => a.voteAverage.compareTo(b.voteAverage)));
+      _value = value;
+      _futureMovies.then((value) =>
+          value.results.sort((a, b) => a.voteAverage.compareTo(b.voteAverage)));
     }
   }
-
 }

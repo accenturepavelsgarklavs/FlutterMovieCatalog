@@ -2,11 +2,11 @@ import 'package:flutter_movie_catalog/features/movie_catalog/domain/entities/mov
 import 'package:flutter_movie_catalog/features/movie_catalog/domain/repositories/movies_repository.dart';
 
 class GetMovies {
-  final MoviesRepository repository;
+  final MoviesRepository _repository;
 
-  GetMovies(this.repository);
+  GetMovies({required repository}) : _repository = repository;
 
-  Future<MoviesEntity> call() async {
-    return await repository.getData();
+  Future<MoviesEntity> data() async {
+    return await _repository.getData();
   }
 }

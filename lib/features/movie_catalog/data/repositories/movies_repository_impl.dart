@@ -3,12 +3,11 @@ import 'package:flutter_movie_catalog/features/movie_catalog/domain/entities/mov
 import 'package:flutter_movie_catalog/features/movie_catalog/domain/repositories/movies_repository.dart';
 
 class MoviesRepositoryImpl implements MoviesRepository {
-  final MovieDbRemoteDataSource movieDbRemoteDataSource;
-
-  MoviesRepositoryImpl({required this.movieDbRemoteDataSource});
+  final MovieDbRemoteDataSource _movieDbRemoteDataSource =
+      MovieDbRemoteDataSource();
 
   @override
   Future<MoviesEntity> getData() {
-    return movieDbRemoteDataSource.getData();
+    return _movieDbRemoteDataSource.getData();
   }
 }

@@ -4,6 +4,7 @@ import 'package:flutter_movie_catalog/features/movie_catalog/presentation/pages/
 
 import 'features/movie_catalog/presentation/bloc/dark_mode_cubit.dart';
 import 'features/movie_catalog/presentation/pages/home_page.dart';
+import 'features/movie_catalog/presentation/pages/saved_movies_page.dart';
 
 void main() => runApp(const MovieCatalogApp());
 
@@ -23,7 +24,8 @@ class MovieCatalogApp extends StatelessWidget {
             initialRoute: "/",
             routes: {
               "/": (context) => const HomePage(),
-              "settings": (context) => const SettingsPage()
+              "settings": (context) => const SettingsPage(),
+              "saved_movies": (context) => const SavedMoviesPage()
             },
           );
         },
